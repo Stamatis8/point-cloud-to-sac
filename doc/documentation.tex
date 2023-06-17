@@ -1,0 +1,145 @@
+\documentclass{report}
+
+\input{include.tex}
+
+\title{Point Cloud to Sectional Area Curve}
+\author{Stamatis Stamatelopoulos}
+
+\begin{document}
+
+\maketitle
+ 
+\tableofcontents
+
+\chapter{Testing}
+
+\section{\texttt{test-1.cpp}}
+
+\newpar The so-called {\it extended Wigley Hull form} \parencite{journee1992experiments} has a 
+simple analytic formulation which permits the exact calculation
+of it's cross-sectional area curve. We use this example to test 
+the accuracy of \texttt{SectionalAreaXwiseYsymmetrical()} to verify. While the standard
+Wigley hull is a rather poor geometry, in the extended version, 
+by varying the parameters $c_1,\ c_2$ and $c_3$ outside their
+prescribed domains $[0,1]$ richer geometries can be generated
+even if they no longer represent a hull-form. The one used here is 
+retrieved from the sample space by setting $L = 2$, $B=0.5$, $T = 0.2$, 
+$c_1 = 5.2$, $c_2 = 2.1$ and $c_3 = 2.3$ (see Figure \ref{fig:test-1-wigley-render}).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/test-1-wigley-render.png}
+    \caption{Geometry used in \texttt{test-1.cpp}. $L = 2$, $B=0.5$, $T = 0.2$, 
+    $c_1 = 5.2$, $c_2 = 2.1$ and $c_3 = 2.3$}
+    \label{fig:test-1-wigley-render}
+\end{figure}
+
+\newpar The \texttt{SectionalAreaXwiseYsymmetrical()} procedure works with 
+a point cloud as input, in order to calculate the cross sectional areas, {\it along the 
+X-direction}, of the underlying geometry. Naturally, said geometry must comply 
+with certain assumptions: given a solid bounded by a surface,
+\begin{enumerate}
+    \item It must be symmetrical with respect to the XZ plane passing through the origin
+    and the point cloud must all lie on one side of it (either positive Y or negative Y)
+    \item It does not have to be convex, however it must be star-convex with respect to 
+    the XZ plane: for every point $p = (p_1,p_2,p_3)$ on the bounding surface, the line between
+    $(p_1,0,p_3)$ and $p$ must be completely contained in the solid
+    \item The point cloud provided must be entirely on the boundary surface (i.e. not on the 
+    solid whose boundary is the given surface)
+\end{enumerate}
+The point cloud provided will directly affect the accuracy of the result, in the sense that uniform point 
+clouds might perform better than arbitrarily generated ones. Nevertheless, for this 
+experiment, the point clouds generated are randomly sampled from the 
+boundary surface's domain. 
+\newpar Now, the scheme employed in \texttt{SectionalAreaXwiseYsymmetrical()} has the following
+seven steps
+\begin{enumerate}
+    \item Identify the domain of the sectional area curve, parametrized in accordance with 
+    the actual surface coordinates
+    \item Discretize the identified domain in $N$ sub-domains $[a_i,b_i]\ i=1,...,N$, each referring to a specific
+    section. Specifically, given the domain $[a,b]$, $N\in\mathbb{N}$ and $\lambda\in\mathbb{R}$, first generate 
+    $t_i = a + (b-a)(i-1)/(N-1)$ for $i=1,...,N$. Then, set $a_0 = a$, $b_N = b$, $l = (t_1-t_0)\lambda$  and $a_i = t_{i-1} - \lambda$,
+    $b_i = t_i + \lambda$ for all other $i$.
+    \item Group the point cloud in terms of this discretization, assigning every point $p=(p_1,p_2,p_3)$, to the sub-domain 
+    $[a_i,b_i]$ where $a_i \le p_2 < b_i$, thereby generating $N$ such groupings
+    \item For every grouping, project all points on the plane $(a_i/2+b_i/2, u, v)$ along $(1,0,0)$
+    \item For every grouping, sort points Z-wise
+    \item For every grouping sum up the rectangles formed by consecutive points $p, q$ by the following 
+    four vertices: $(pq),\ (p\tilde{p}),\ (q\tilde{q})$ and $(\tilde{p}\tilde{q})$, where for $x=(x_1,x_2,x_3)$,
+    $\tilde{x}=(x_1,0,x_3)$
+    \item For every grouping multiply the total resulting area by $2$
+\end{enumerate}
+\newpar We proceed by a brief investigation of the effect of the following parameters, on the 
+accuracy of the approximation: (1) size of the generated point cloud (2) number of points 
+to evaluate the sectional area at (3) $\lambda\in[0,1]$ to determine for each sectional area,
+how many neighboring points are considered. From the relevant experimentation, it seems that 
+the determination of this parameters is an information issue: the more information (large point cloud),
+the more sectional-area curve points can be requested with sufficient accuracy, which is to be expected.
+However, this means that depending on the application (i.e. calculation of sectional area curve derivatives 
+via finite differences), a relatively small point cloud might be sufficient. We begin with the generation of 
+a point cloud in 3000 points, each randomly sampled from the surface's domain (see Figures \ref{fig:test-1-wigley-render-3K-point-cloud-1} and \ref{fig:test-1-wigley-render-3K-point-cloud-2}).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/test-1-wigley-render-3K-point-cloud-1.png}
+    \caption{3000 points randomly generated on the surface, top view}
+    \label{fig:test-1-wigley-render-3K-point-cloud-1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/test-1-wigley-render-3K-point-cloud-2.png}
+    \caption{3000 points randomly generated on the surface, bottom view}
+    \label{fig:test-1-wigley-render-3K-point-cloud-2}
+\end{figure}
+\newpar Then, let $N=10$ and $\lambda = 1.0$, so that all the points in the point cloud are used. Looking in Figure \ref{fig:test-1-sac-3K-l-100-N-10}, this selection
+of $N$, $\lambda$ results in an $L^\infty$ error of $0.00711$ at the calculated points. Part of this error is caused by using points 
+far away from the longitudinal point of evaluation to evaluate the sectional area curve. If we instead limit the this selection by setting 
+$\lambda = 0.78$, the error can be reduced to $0.00332$ (see Figure \ref{fig:test-1-sac-3K-l-78-N-10}).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/test-1-sac-3K-l-100-N-10.pdf}
+    \caption{Sectional area curve at $N=10$ points, of the geometry depicted in Figure \ref{fig:test-1-wigley-render},
+    using 3000 randomly sampled points, and $\lambda = 1.0$. The $L^\infty$ error at the evaluated points is $0.00711$}
+    \label{fig:test-1-sac-3K-l-100-N-10}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/test-1-sac-3K-l-78-N-10.pdf}
+    \caption{Sectional area curve at $N=10$ points, of the geometry depicted in Figure \ref{fig:test-1-wigley-render},
+    using 3000 randomly sampled points, and $\lambda = 0.78$. The $L^\infty$ error at the evaluated points is $0.00332$}
+    \label{fig:test-1-sac-3K-l-78-N-10}
+\end{figure}
+\newpar Finally, Figures \ref{fig:test-1-wigley-render-3K-l-78-N-10-1} and \ref{fig:test-1-wigley-render-3K-l-78-N-10-2} illustrate
+this selection, where the bronze cubes are the points that were used to calculate each cross section's area.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/test-1-wigley-render-3K-l-78-N-10-1.png}
+    \caption{3000 points randomly generated on the surface. The bronze cubes depict the sub-selection
+    of on-surface points when $N=10$ and $\lambda = 0.78$. Top view}
+    \label{fig:test-1-wigley-render-3K-l-78-N-10-1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/test-1-wigley-render-3K-l-78-N-10-2.png}
+    \caption{3000 points randomly generated on the surface. The bronze cubes depict the sub-selection
+    of on-surface points when $N=10$ and $\lambda = 0.78$. Bottom view}
+    \label{fig:test-1-wigley-render-3K-l-78-N-10-2}
+\end{figure}
+\newpar Continuing to reduce $\lambda$ does not further increase performance as there is 
+not enough information (point cloud size) to do so, which clarifies the balance between 
+deviation due to insufficient amount of information and deviation due to too much information (using 
+points further far away from the point where the sectional area is evaluated at). See Figure \ref{fig:test-1-sac-3K-l-20-N-10} for the
+resulting sectional area curve with error $0.00642$ if $\lambda=0.2$ and Figure \ref{fig:test-1-wigley-render-3K-l-20-N-10-1} for the on-surface selection.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/test-1-sac-3K-l-20-N-10.pdf}
+    \caption{Sectional area curve at $N=10$ points, of the geometry depicted in Figure \ref{fig:test-1-wigley-render},
+    using 3000 randomly sampled points, and $\lambda = 0.2$. The $L^\infty$ error at the evaluated points is $0.00642$}
+    \label{fig:test-1-sac-3K-l-20-N-10}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/test-1-wigley-render-3K-l-20-N-10-1.png}
+    \caption{3000 points randomly generated on the surface. The bronze cubes depict the sub-selection
+    of on-surface points when $N=10$ and $\lambda = 0.2$. Top view}
+    \label{fig:test-1-wigley-render-3K-l-20-N-10-1}
+\end{figure}
+\end{document}

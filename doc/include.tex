@@ -1,0 +1,73 @@
+\usepackage[utf8]{inputenc}
+
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsfonts}
+\usepackage[dvipsnames]{xcolor}
+
+\usepackage{svg}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathabx}
+
+\usepackage{ulem}
+
+\usepackage{cancel}
+
+\usepackage{listings}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    allcolors=blue,
+    }
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=15mm,
+ top=20mm,
+ right = 15mm,
+ bottom = 20mm
+ }
+
+\usepackage{fancyhdr}
+\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+\fancyhead[RO]{\chaptermark}
+\fancyfoot{}
+\fancyfoot[R]{Page \thepage}
+
+\usepackage[style=authoryear-ibid,backend=biber]{biblatex}
+\addbibresource{bibliography.bib}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{axiom}{Axiom}
+\newtheorem{corollary}{Corollary}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+\newtheorem{question}{Question}[section]
+\newtheorem{answer}{Answer}[section]
+
+\usepackage{subfiles}
+
+\usepackage{changepage}
+
+\usepackage{framed}
+
+\newcommand{\AND}{\wedge}
+\newcommand{\OR}{\vee}
+\newcommand{\NOT}{\neg}
+\newcommand{\EMPTY}{\varnothing}
+
+\newcommand{\UNDER}{\uline}
+
+\newcommand{\newpar}{\vspace{\baselineskip}\par\noindent}
