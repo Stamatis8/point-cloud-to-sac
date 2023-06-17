@@ -4,14 +4,14 @@
 #include <vector>
 
 //triangulations utility
-#include "../GMGSA/smpl_triangulation/smpl_triangulation.hpp"
+#include "../src/smpl-triangulation/smpl_triangulation.hpp"
 
 //triangulation geometric moment calculator
-#include "../GMGSA/geom_moments/geom_moments.hpp"
+#include "../src/geom_moments/geom_moments.hpp"
 
 //FileIO
-#include "../util/WriteToFile.hpp"
-#include "../util/ReadFile.hpp"
+#include "../src/utils/WriteToFile.hpp"
+#include "../src/utils/ReadFile.hpp"
 
 class KCSsimModeler{
     /*
