@@ -13,7 +13,7 @@
 
 \chapter{Testing}
 
-\section{\texttt{test-1.cpp}}
+\section{\texttt{test-1.cpp}}\label{sec:test-1}
 
 \newpar The so-called {\it extended Wigley Hull form} \parencite{journee1992experiments} has a 
 simple analytic formulation which permits the exact calculation
@@ -142,4 +142,20 @@ resulting sectional area curve with error $0.00642$ if $\lambda=0.2$ and Figure 
     of on-surface points when $N=10$ and $\lambda = 0.2$. Top view}
     \label{fig:test-1-wigley-render-3K-l-20-N-10-1}
 \end{figure}
+
+\section{\texttt{test-2.cpp}}
+
+\newpar \texttt{SectionalAreaXwiseYsymmetrical()} can be used to numerically evaluate the derivatives of the sectional area curve.
+For example, generating 1000 points to the aft and to the bow the extended wigley hull (see Section \ref{sec:test-1}), then evaluating 
+the cross sectional area at five points and using the first two calculate the 1-point finite-difference derivative, an accuracy of 
+0.001\% relative to the analytic derivative is achieved (see Figure \ref{fig:test-2-1K-l-100-derivatives})
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/test-2-1K-l-100-derivatives.pdf}
+    \caption{1st derivatives of sectional area curve evaluated through 1-point finite differences using \texttt{SectionalAreaXwiseYsymmetrical()}. 
+    1000 points were generated at aft and bow. The relative difference between the approximate
+    and analytic derivatives is in the order of 0.001\%}
+    \label{fig:test-2-1K-l-100-derivatives}
+\end{figure}
+
 \end{document}
