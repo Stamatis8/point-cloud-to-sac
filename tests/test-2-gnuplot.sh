@@ -12,6 +12,4 @@ plot "test-2-analytic.dat" w l title 'analytic',\
      "test-2-analytic-deriv-aft.dat" w l title 'analytic tangent aft',\
      "test-2-analytic-deriv-fwd.dat" w l title 'analytic tangent fwd',\
      "test-2-approx-deriv-1-aft.dat" w l title '1-point tangent aft',\
-     "test-2-approx-deriv-5-aft.dat" w l title '5-point tangent aft',\
-     "test-2-approx-deriv-1-fwd.dat" w l title '1-point tangent fwd',\
-     "test-2-approx-deriv-5-fwd.dat" w l title '5-point tangent fwd'
+     "test-2-approx-deriv-1-fwd.dat" w l title '1-point tangent fwd'
