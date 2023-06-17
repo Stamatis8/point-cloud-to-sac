@@ -1,0 +1,16 @@
+tests/out.exe
+tests/test-2-wigley.stl
+tests/test-2-analytic-deriv-aft.dat
+tests/test-2-analytic-deriv-fwd.dat
+tests/test-2-analytic.dat
+tests/test-2-approx-deriv-1-aft.dat
+tests/test-2-approx-deriv-1-fwd.dat
+tests/test-2-approx-deriv-5-aft.dat
+tests/test-2-approx-deriv-5-fwd.dat
+tests/test-2-point-cloud-aft.txt
+tests/test-2-point-cloud-fwd.txt
+tests/test-2-point-cloud-reduced-aft.txt
+tests/test-2-point-cloud-reduced-fwd.txt
+.vscode/settings.json
+doc/rhino-assets/test-1.3dm
+doc/rhino-assets/test-1.3dmbak
