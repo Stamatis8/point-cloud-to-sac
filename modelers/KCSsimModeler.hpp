@@ -94,7 +94,7 @@ public:
     void set_design(std::vector<double> design_in, const std::string matlab_executable_directory = ""){
 
         //matlab_executable_directory must be in backslashes. For example
-        //   matlab_executable_directory = "folder1\\folder1_1\\folder_1_1_1"
+        //   matlab_executable_directory = "folder1\\folder1_1\\folder_1_1_1\\"
 
         /* update this->design */
 
@@ -109,28 +109,25 @@ public:
 
         /* evaluate triangulation */
 
-        //write design to a file
-        WriteToFile(this->design,std::string(matlab_executable_directory+"design.txt").c_str(),false);
-
-        //write all preimage vertices to a file
-        WriteToFile(this->triangulation_preimage_nodes_in_surface_domain,std::string(matlab_executable_directory+"planar_points.txt").c_str());
-
-        //create new file with preimage points mapped to on-surface points through matlab script
-        //system("matlab -batch \"run(\'src/modelers/KCSsimModelerEvaluate.m\')\"");
-        system(std::string(matlab_executable_directory+"KCSsimModelerEvaluateLocal.exe").c_str());
-
-        //read new on-surface vertices, translate them appropriately and write to this->triangulation
+        //generate dummy triangulation as copy of planar triangulation
         smpl_triangulation::Triangulation<std::vector<double>> dummy_triangulation = this->triangulation_preimage;
-        dummy_triangulation.nodes = ReadFile(std::string(matlab_executable_directory+"surface_points.txt").c_str());
+        
+        //map onto surface
+        dummy_triangulation.nodes = this->evaluate(&this->triangulation_preimage_nodes_in_surface_domain, matlab_executable_directory);
+
+        //translate vertices appropriately to cover entire hull
         for(int i = 0; i < dummy_triangulation.nodes.size(); i++){
             if(this->triangulation_preimage.nodes.at(i).at(0) < 0.0){
                 //mirror on-surface vertex to starboard side
                 dummy_triangulation.nodes.at(i).at(1) *= -1.0;
             }
         }
+
+        //write to this->triangulation
         this->triangulation = dummy_triangulation;
 
         /* SAaft, SAbow, dSAaft, dSAbow  */
+        
     }
 
     /* Get Design Space */
@@ -178,6 +175,43 @@ public:
         return this->triangulation;
     }
 
+    std::vector<std::vector<double>> evaluate(
+        std::vector<std::vector<double>> * parametric_points, 
+        std::string matlab_executable_directory) const{
+        /*
+            Description: pass a pointer to a number of list of parametric points, and map them onto the surface. 
+
+            Input:
+                - std::vector<std::vector<double>> * parametric_points
+                    - pointer to parametric_points
+                    - all parametric_points must be in [0,1]^2
+                    - v parametric-direction is longitudinal-direction, with (0,0) -> aft and (0,1) -> bow
+                - std::string matlab_executable_directory
+                    - directory were the relevant matlab executable is located at
+                    - all auxiliary files (design.txt, planar_points.txt, surface_points.txt) are created and read
+                        from this directory     
+                    - directory must by in backslahes, example 
+                        matlab_executable_directory = "folder1\\folder1_1\\folder_1_1_1\\"
+            Output:
+                - std::vector<std::vector<double>> surface_points
+                    - parametric_points mapped onto surface
+                    - they are all mapped to one side of the hull
+        */
+
+        //write design to a file
+        WriteToFile(this->design,std::string(matlab_executable_directory+"design.txt").c_str(),false);
+
+        //write all preimage vertices to a file
+        WriteToFile(*parametric_points,std::string(matlab_executable_directory+"planar_points.txt").c_str());
+
+        //create new file with preimage points mapped to on-surface points through matlab script
+        //system("matlab -batch \"run(\'src/modelers/KCSsimModelerEvaluate.m\')\"");
+        system(std::string(matlab_executable_directory+"KCSsimModelerEvaluateLocal.exe").c_str());
+    
+        return ReadFile(std::string(matlab_executable_directory+"surface_points.txt").c_str());
+
+    }
+
 protected:
 
     std::vector<std::vector<double>> design_space_attribute;// ith parameter \in [design_space.at(i).at(0), design_space.at(i).at(1)]
@@ -185,6 +219,11 @@ protected:
     std::vector<bool> fixed_parameters_mask;// 29-item vector. If mask.at(i) = true then ith parameter is fixed
 
 	std::vector<double> design;// current design. Automatically loaded with fixed parameters from initialization
+
+    std::vector<std::vector<double>> aft_point_cloud;// point cloud used to evaluate sectional area derivative at aft
+
+    std::vector<std::vector<double>> bow_point_cloud;// point cloud used to evaluate sectional area derivative at bow
+
 
     /* everything below here is specific to the current design */
 
@@ -210,6 +249,7 @@ protected:
                                                                                     // so that for every design, when the actual on-surface
                                                                                     // triangulation is generated, the correct on-surface
                                                                                     // vertices are mirrored to the other side of the vessel
+
 }; //KCSsimModeler
 
 #endif //KCSSIMMODELER_HPP
