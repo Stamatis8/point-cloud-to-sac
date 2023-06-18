@@ -10,7 +10,7 @@ Test first derivative of sectional are curve generated through `SectionalAreaXwi
 
 ## test-3.cpp
 
-Evaluate cross sectional area curve for KCSsim hull (see `KCSsimModeler.hpp`) using `SectionalAreaXwiseYsymmetrical()`. Test for validity by integating and comparing with model volume
+Evaluate cross sectional area curve for KCSsim hull (see `KCSsimModeler.hpp`) using `SectionalAreaXwiseYsymmetrical()`. Test for validity by integrating and comparing with model volume
 
 ## test-4.cpp
 
