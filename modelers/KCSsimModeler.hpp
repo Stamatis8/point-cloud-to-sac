@@ -2,9 +2,15 @@
 #define KCSSIMMODELER_HPP
 
 #include <vector>
+#include <iostream>
 
 //triangulations utility
 #include "../src/smpl-triangulation/smpl_triangulation.hpp"
+
+//sectional area utilities
+#include "../src/utils/grid.hpp"
+#include "../src/point-cloud-to-sac.hpp"
+#include "../src/numerical-differentiation.hpp"
 
 //triangulation geometric moment calculator
 #include "../src/geom_moments/geom_moments.hpp"
@@ -87,6 +93,17 @@ public:
                 this->triangulation_preimage_nodes_in_surface_domain.at(i).at(0) *= -1.0;
             }
         }
+
+        /* generate aft and bow point cloud preimages */
+        int Ncloud = 5000;
+        this->bow_point_cloud_preimage = grid({{0.0,1.0},{0.0,0.1}}, std::ceil(std::sqrt((7.0)*double(Ncloud))), std::ceil(std::sqrt((1.0/7.0)*double(Ncloud))));
+        this->aft_point_cloud_preimage = grid({{0.0,1.0},{0.9,1.0}}, std::ceil(std::sqrt((7.0)*double(Ncloud))), std::ceil(std::sqrt((1.0/7.0)*double(Ncloud))));
+    
+        /* save all preimage point to be mapped onto surface and evaluated for each design to 'this->all_preimage_points'*/
+        this->all_preimage_points = this->triangulation_preimage_nodes_in_surface_domain;
+        this->all_preimage_points.insert(this->all_preimage_points.end(),this->aft_point_cloud_preimage.begin(),this->aft_point_cloud_preimage.end());
+        this->all_preimage_points.insert(this->all_preimage_points.end(),this->bow_point_cloud_preimage.begin(),this->bow_point_cloud_preimage.end());
+
     };
 
     /* Set Design */
@@ -107,13 +124,20 @@ public:
             }
         }
 
+        /* send preimage points for evaluation */
+        //  these points will include the aft/bow point clouds used to approximate dSAaft and dSAbow 
+        std::vector<std::vector<double>> all_on_surface_points = this->evaluate(&this->all_preimage_points, matlab_executable_directory);
+
         /* evaluate triangulation */
 
         //generate dummy triangulation as copy of planar triangulation
         smpl_triangulation::Triangulation<std::vector<double>> dummy_triangulation = this->triangulation_preimage;
         
-        //map onto surface
-        dummy_triangulation.nodes = this->evaluate(&this->triangulation_preimage_nodes_in_surface_domain, matlab_executable_directory);
+        //extract from 'all_on_surface_points' the triangulation part
+        dummy_triangulation.nodes = std::vector<std::vector<double>>(
+            all_on_surface_points.begin(),
+            all_on_surface_points.begin()+this->triangulation_preimage_nodes_in_surface_domain.size());
+        //dummy_triangulation.nodes = this->evaluate(&this->triangulation_preimage_nodes_in_surface_domain, matlab_executable_directory);
 
         //translate vertices appropriately to cover entire hull
         for(int i = 0; i < dummy_triangulation.nodes.size(); i++){
@@ -126,8 +150,44 @@ public:
         //write to this->triangulation
         this->triangulation = dummy_triangulation;
 
-        /* SAaft, SAbow, dSAaft, dSAbow  */
-        
+        /* SAaft, SAbow, dSAaft, dSAbow calculation */
+
+        //extract from 'all_on_surface_points' the aft cloud point part
+        std::vector<std::vector<double>> aft_point_cloud = std::vector<std::vector<double>>(
+            all_on_surface_points.begin()+this->triangulation_preimage_nodes_in_surface_domain.size(),
+            all_on_surface_points.begin()+this->triangulation_preimage_nodes_in_surface_domain.size()+this->aft_point_cloud_preimage.size()
+        );
+        //sort it X-coordinate wise
+        std::sort(aft_point_cloud.begin(),aft_point_cloud.end(),[](std::vector<double> a,std::vector<double> b){return a.at(0) < b.at(0);});
+
+        //extract from 'all_on_surface_points' the bow cloud point part
+        std::vector<std::vector<double>> bow_point_cloud = std::vector<std::vector<double>>(
+            all_on_surface_points.begin()+this->triangulation_preimage_nodes_in_surface_domain.size()+this->aft_point_cloud_preimage.size(),
+            all_on_surface_points.begin()+this->triangulation_preimage_nodes_in_surface_domain.size()+this->aft_point_cloud_preimage.size()+this->bow_point_cloud_preimage.size()
+        );
+        //sort it X-coordinate wise
+        std::sort(bow_point_cloud.begin(),bow_point_cloud.end(),[](std::vector<double> a,std::vector<double> b){return a.at(0) < b.at(0);});
+
+        //determine total length, including bulbous bow
+        double Ltotal = std::abs(bow_point_cloud.back().at(0) - aft_point_cloud.at(0).at(0));
+        double L = this->design.at(0);
+
+        //calculate aft and bow sections to evaluate cross-sectional area at
+        double delta = 0.01;
+        std::vector<std::vector<double>> aft_sections = pc2sac::DiscreteBucketsRelative(-L,-L+delta*Ltotal, 3, 1.0);
+        std::vector<std::vector<double>> bow_sections = pc2sac::DiscreteBucketsRelative(Ltotal-L-delta*Ltotal,Ltotal-L, 3, 1.0);
+
+        //evaluate cross-sectional areas
+        std::vector<std::vector<double>> aft_areas = SectionalAreaXwiseYsymmetrical(aft_point_cloud, aft_sections);
+        std::vector<std::vector<double>> bow_areas = SectionalAreaXwiseYsymmetrical(bow_point_cloud, bow_sections);
+
+        //save SAaft, SAbow
+        this->SAaft = aft_areas.at(1).at(0);
+        this->SAbow = bow_areas.at(1).back();
+
+        //calculate dSAaft, dSAbow
+        this->dSAaft = Fwd1pointNumDiff(aft_areas.at(1).at(0), aft_areas.at(1).at(1), aft_areas.at(0).at(1)-aft_areas.at(0).at(0));
+        this->dSAbow = Bck1pointNumDiff(bow_areas.at(1).back(), bow_areas.at(1).at(1), bow_areas.at(0).back()-bow_areas.at(0).at(1));
     }
 
     /* Get Design Space */
@@ -160,7 +220,16 @@ public:
             Description: returns cross sectional area from x = 0.0 (aft) to x = 1.0 (bow)
         */
 
-        return 0.0;
+        if(x == 0.0){
+            return this->SAaft;
+        }
+        else if(x == 1.0){ 
+            return this->SAbow;
+        }
+        else{
+            std::cout << "KCSsim cannot produce SA not at aft or bow" << std::endl;
+            throw(0.0);
+        }
     }
 
     double dSectionalArea(double x) const{
@@ -168,7 +237,16 @@ public:
             Description: returns derivative of cross sectional area curve from x = 0.0 (aft) to x = 1.0 (bow)
         */
         
-        return 0.0;
+        if(x == 0.0){
+            return this->dSAaft;
+        }
+        else if(x == 1.0){ 
+            return this->dSAbow;
+        }
+        else{
+            std::cout << "KCSsim cannot produce dSA not at aft or bow" << std::endl;
+            throw(0.0);
+        }
     }
 
     smpl_triangulation::Triangulation<std::vector<double>> get_triangulation(){
@@ -220,12 +298,19 @@ protected:
 
 	std::vector<double> design;// current design. Automatically loaded with fixed parameters from initialization
 
-    std::vector<std::vector<double>> aft_point_cloud;// point cloud used to evaluate sectional area derivative at aft
+    std::vector<std::vector<double>> aft_point_cloud_preimage;// preimage of point cloud used to evaluate sectional area derivative at aft
 
-    std::vector<std::vector<double>> bow_point_cloud;// point cloud used to evaluate sectional area derivative at bow
-
+    std::vector<std::vector<double>> bow_point_cloud_preimage;// preimage of point cloud used to evaluate sectional area derivative at bow
 
     /* everything below here is specific to the current design */
+
+    std::vector<std::vector<double>> all_preimage_points;// all preimage points to be mapped on-surface
+                                                         // these include:
+                                                         //     - this->triangulation_preimage_nodes_in_surface_domain
+                                                         //     - this->aft_point_cloud_preimage
+                                                         //     - this->bow_point_cloud_preimage
+
+    /* next follows the attributes related to the calculation of SA and dSA */
 
     double SAaft;// sectional area at aft
 
