@@ -214,16 +214,16 @@ int main(){
     WriteToFile(approx_dsac_fwd, approx_deriv_5_filename_fwd);
 
     /* print out error */
-    std::cout << "Analytic Aft Derivative - 1 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_1pnt_aft)/std::abs(dSA_analytic_aft) << "%" << std::endl;
-    std::cout << "Analytic Aft Derivative - 2 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_2pnt_aft)/std::abs(dSA_analytic_aft) << "%" << std::endl;
-    std::cout << "Analytic Aft Derivative - 3 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_3pnt_aft)/std::abs(dSA_analytic_aft) << "%" << std::endl;
-    std::cout << "Analytic Aft Derivative - 4 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_4pnt_aft)/std::abs(dSA_analytic_aft) << "%" << std::endl;
-    std::cout << "Analytic Aft Derivative - 5 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_5pnt_aft)/std::abs(dSA_analytic_aft) << "%" << std::endl;
-    std::cout << "Analytic Fwd Derivative - 1 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_1pnt_fwd)/std::abs(dSA_analytic_fwd) << "%" << std::endl;
-    std::cout << "Analytic Fwd Derivative - 2 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_2pnt_fwd)/std::abs(dSA_analytic_fwd) << "%" << std::endl;
-    std::cout << "Analytic Fwd Derivative - 3 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_3pnt_fwd)/std::abs(dSA_analytic_fwd) << "%" << std::endl;
-    std::cout << "Analytic Fwd Derivative - 4 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_4pnt_fwd)/std::abs(dSA_analytic_fwd) << "%" << std::endl;
-    std::cout << "Analytic Fwd Derivative - 5 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_5pnt_fwd)/std::abs(dSA_analytic_fwd) << "%" << std::endl;
+    std::cout << "Analytic Aft Derivative - 1 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_1pnt_aft)/std::abs(dSA_analytic_aft) << std::endl;
+    std::cout << "Analytic Aft Derivative - 2 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_2pnt_aft)/std::abs(dSA_analytic_aft) << std::endl;
+    std::cout << "Analytic Aft Derivative - 3 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_3pnt_aft)/std::abs(dSA_analytic_aft) << std::endl;
+    std::cout << "Analytic Aft Derivative - 4 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_4pnt_aft)/std::abs(dSA_analytic_aft) << std::endl;
+    std::cout << "Analytic Aft Derivative - 5 point Approx Aft Derivative: " << std::abs(dSA_analytic_aft - dSA_5pnt_aft)/std::abs(dSA_analytic_aft) << std::endl;
+    std::cout << "Analytic Fwd Derivative - 1 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_1pnt_fwd)/std::abs(dSA_analytic_fwd) << std::endl;
+    std::cout << "Analytic Fwd Derivative - 2 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_2pnt_fwd)/std::abs(dSA_analytic_fwd) << std::endl;
+    std::cout << "Analytic Fwd Derivative - 3 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_3pnt_fwd)/std::abs(dSA_analytic_fwd) << std::endl;
+    std::cout << "Analytic Fwd Derivative - 4 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_4pnt_fwd)/std::abs(dSA_analytic_fwd) << std::endl;
+    std::cout << "Analytic Fwd Derivative - 5 point Approx Fwd Derivative: " << std::abs(dSA_analytic_fwd - dSA_5pnt_fwd)/std::abs(dSA_analytic_fwd) << std::endl;
     system("gnuplot test-2-gnuplot.sh");
 
     return 0;
