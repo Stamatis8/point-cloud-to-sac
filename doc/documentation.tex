@@ -158,4 +158,87 @@ the cross sectional area at five points and using the first two calculate the 1-
     \label{fig:test-2-1K-l-100-derivatives}
 \end{figure}
 
+\section{\texttt{test-3.cpp}}
+
+\newpar The cross sectional area curve of the KCSsim hull (see \texttt{KCSsim.hpp} modeller and \cite{KHAN2022103339}) is calculated 
+using \texttt{SectionalAreaXwiseYsymmetrical()} routine. Since the analytic sectional area curve of 
+the KCSsim hull is not available, the validity of the produced curve is verified through it's 
+integral which must be equal to the volume of the underlying geometry. Said integral is approximated 
+numerically, while the volume is calculated through a triangulation of the KCSsim hull in 5e4 triangles.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figures/test-3-kcssim-render.png}
+    \caption{Rendered KCSsim hull. Design is documented in Table \ref{tab:test-3-kcssim-design}}
+    \label{fig:test-3-kcssim-render}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & 0.5 & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & 0.5 \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull rendered in Figure \ref{fig:test-3-kcssim-render}}
+    \label{tab:test-3-kcssim-design}
+\end{table}
+\newpar Now, two points clouds have been generated, one random and one uniform, both having 3e4 points and 
+the resulting sectional area curves are depicted in Figure \ref{fig:test-3-sac-random-uniform}. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/test-3-sac-random-uniform.pdf}
+    \caption{Sectional area curves from 51 sections, evaluated for the KCSsim hull documented 
+    in Table \ref{tab:test-3-kcssim-design}, using a random and a uniform point cloud in 3e4
+    points and $\lambda = 1.0$ in \texttt{SectionalAreaXwiseYsymmetrical()}. Even though the uniform
+    sectional area curve is smoother that it's random counterpart, integrating them in order to 
+    derive the volume of the underlying geometry, yields a smaller error for the random-case. Specifically,
+    the relative errors compared to the actual volume, for the uniformly and randomly generated 
+    point clouds were 0.01188 and 0.00564 respectively.}
+    \label{fig:test-3-sac-random-uniform}
+\end{figure}
+\newpar As is noted in Figure \ref{fig:test-3-sac-random-uniform}, the randomly-generated point 
+cloud outperformed the uniformly generated one. The reason is that the uniformly generated point cloud was restricted to the iso-curves of the surface, thereby
+leaving large areas of the geometry empty, which was not the case with the randomly-generated one.
+This is illustrated in Figures \ref{fig:test-3-kcssim-random-uniform-render} and 
+\ref{fig:test-3-kcssim-random-uniform-render-close-up}, where the uniform point cloud (blue spheres),
+identify the contours of the surface's iso-curves, while the randomly-generated point cloud, covers the surface 
+more evenly (ironically, more uniformly).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-3-kcssim-random-uniform-render.png}
+    \caption{Render of bow-section of KCSsim hull documented in Table \ref{tab:test-3-kcssim-design},
+    with two point clouds: a uniformly generated point cloud (blue spheres) and a randomly generated 
+    point cloud (bronze cubes)}
+    \label{fig:test-3-kcssim-random-uniform-render}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-3-kcssim-random-uniform-render-close-up.png}
+    \caption{Close-up render of bow-section of KCSsim hull documented in Table \ref{tab:test-3-kcssim-design},
+    with two point clouds: a uniformly generated point cloud (blue spheres) and a randomly generated 
+    point cloud (bronze cubes)}
+    \label{fig:test-3-kcssim-random-uniform-render-close-up}
+\end{figure}
+
 \end{document}

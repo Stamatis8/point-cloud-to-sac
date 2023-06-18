@@ -27,3 +27,5 @@ tests/test-3-point-cloud.txt
 tests/test-3-point-cloud-reduced.txt
 tests/test-3-KCSsim.stl
 tests/test-3-sac-random-uniform.pdf
+doc/rhino-assets/test-3.3dm.rhl
+doc/rhino-assets/test-3.3dmbak
