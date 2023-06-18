@@ -29,3 +29,17 @@ tests/test-3-KCSsim.stl
 tests/test-3-sac-random-uniform.pdf
 doc/rhino-assets/test-3.3dm.rhl
 doc/rhino-assets/test-3.3dmbak
+doc/rhino-assets/test-4.3dm.rhl
+doc/rhino-assets/test-4.3dmbak
+tests/test-4-approx-deriv-1-aft.dat
+tests/test-4-approx-deriv-1-fwd.dat
+tests/test-4-approx.dat
+tests/test-4-KCSsim.stl
+tests/test-4-point-cloud-aft.txt
+tests/test-4-point-cloud-fwd.txt
+tests/test-4-point-cloud-reduced.txt
+tests/test-4-point-cloud.txt
+tests/temp-aft.txt
+tests/temp-bow.txt
+tests/temp-bow-sections.dat
+tests/temp-aft-sections.dat
