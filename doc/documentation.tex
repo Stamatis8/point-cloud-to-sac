@@ -158,7 +158,7 @@ the cross sectional area at five points and using the first two calculate the 1-
     \label{fig:test-2-1K-l-100-derivatives}
 \end{figure}
 
-\section{\texttt{test-3.cpp}}
+\section{\texttt{test-3.cpp}}\label{sec:test-3}
 
 \newpar The cross sectional area curve of the KCSsim hull (see \texttt{KCSsim.hpp} modeller and \cite{KHAN2022103339}) is calculated 
 using \texttt{SectionalAreaXwiseYsymmetrical()} routine. Since the analytic sectional area curve of 
@@ -241,4 +241,623 @@ more evenly (ironically, more uniformly).
     \label{fig:test-3-kcssim-random-uniform-render-close-up}
 \end{figure}
 
+\section{\texttt{test-4.cpp}}
+
+\newpar In this test, the KCSsim modeller is supplemented with a procedure 
+to evaluate the derivatives of it's sectional area curve at the boundary
+points. Then, the curve it-self is evaluated as in Section \ref{sec:test-3}, and the 
+image of the differentials of the curve (tangents) are plotted at the 
+boundary points. This experiment is repeated across 15 different instances of the 
+parametric modeller, including the one used in Section \ref{sec:test-3}. These
+have been documented in Appendix \ref{appendix:test-4-graphics}.
+
+\newpar In order to evaluate the directional derivatives at the bow and the aft, two
+point clouds are generated and a 1-point numerical differentiation scheme is used.
+These point clouds are configured such that for all models they are sufficiently dense and 
+close enough to the bow and the aft. To do this, after generating the point cloud, only ones 
+that are a specific distance close to the bow and the aft are used for computing the derivative of 
+the sectional area curve. See Figure \ref{fig:test-4-experiment-15-render} for an illustration of 
+this procedure.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figures/test-4-experiment-15-render.png}
+    \caption{This is the example documented in Table \ref{tab:test-4-15}. The blue points form the 
+    bow-generated point cloud, and then the ones behind the frosted screen are discarded. The extra points 
+    are necessary because depending on the parametric model, the cloud preimage on the surface's domain is 
+    mapped differently onto the surface}
+    \label{fig:test-4-experiment-15-render}
+\end{figure}
+
+\printbibliography
+
+\appendix
+
+\chapter{\texttt{test-4.cpp}  graphical output}\label{appendix:test-4-graphics}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & 0.5 & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & 0.5 \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-1}}
+    \label{tab:test-4-1}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-1.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-1}}
+    \label{fig:test-4-sac-1}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & 0.5 & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & 0.5 \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & {\color{blue} 1.0} & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-2}}
+    \label{tab:test-4-2}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-2.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-2}}
+    \label{fig:test-4-sac-2}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & 0.5 & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & 0.5 \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & {\color{blue} 0.0} & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-3}}
+    \label{tab:test-4-3}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-3.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-3}}
+    \label{fig:test-4-sac-3}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & {\color{blue} 1.0} & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & 0.5 & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & 0.5 \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-4}}
+    \label{tab:test-4-4}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-4.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-4}}
+    \label{fig:test-4-sac-4}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & {\color{blue} 0.0} & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & 0.5 & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & 0.5 \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-5}}
+    \label{tab:test-4-5}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-5.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-5}}
+    \label{fig:test-4-sac-5}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & {\color{blue} 0.0} & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & 0.5 \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-6}}
+    \label{tab:test-4-6}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-6.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-6}}
+    \label{fig:test-4-sac-6}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & {\color{blue} 1.0} & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & 0.5 \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-7}}
+    \label{tab:test-4-7}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-7.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-7}}
+    \label{fig:test-4-sac-7}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & 0.5 & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & {\color{blue} 0.0} \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-8}}
+    \label{tab:test-4-8}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-8.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-8}}
+    \label{fig:test-4-sac-8}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & 0.5 & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & {\color{blue} 1.0} \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-9}}
+    \label{tab:test-4-9}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-9.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-9}}
+    \label{fig:test-4-sac-9}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.5 & $c_{21}$ & 1.0 \\
+        \hline 
+        $c_2$ & 0.8 & $c_{12}$ & 0.5 & $c_{22}$ & 0.0\\
+        \hline 
+        $c_3$ & 0.8 & $c_{13}$ & {\color{blue} 1.0} & $c_{23}$ & 0.5 \\
+        \hline 
+        $c_4$ & 0.265 & $c_{14}$ & 0.5 & $c_{24}$ & 0.5 \\
+        \hline 
+        $c_5$ & 0.543 & $c_{15}$ & 0.5 & $c_{25}$ & 0.5 \\
+        \hline 
+        $c_6$ & 0.0 & $c_{16}$ & 0.05 & $c_{26}$ & 0.5 \\
+        \hline 
+        $c_7$ & 0.3 & $c_{17}$ & 0.5 & $c_{27}$ & {\color{blue} 0.0} \\
+        \hline 
+        $c_8$ & 0.65 & $c_{18}$ & 0.7 & $c_{28}$ & 0.5 \\
+        \hline 
+        $c_9$ & 0.7 & $c_{19}$ & 0.8 & $c_{29}$ & 0.5 \\
+        \hline 
+        $c_{10}$ & 0.5 & $c_{20}$ & 1.0 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-10}}
+    \label{tab:test-4-10}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-10.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-10}}
+    \label{fig:test-4-sac-10}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.171 & $c_{21}$ & 0.239 \\
+        \hline 
+        $c_2$ & 0.011 & $c_{12}$ & 0.727 & $c_{22}$ & 0.477\\
+        \hline 
+        $c_3$ & 0.037 & $c_{13}$ & 0.992 & $c_{23}$ & 0.217 \\
+        \hline 
+        $c_4$ & 0.165 & $c_{14}$ & 0.597 & $c_{24}$ & 0.482 \\
+        \hline 
+        $c_5$ & 0.509 & $c_{15}$ & 0.503 & $c_{25}$ & 0.197 \\
+        \hline 
+        $c_6$ & 0.747 & $c_{16}$ & 0.351 & $c_{26}$ & 0.128 \\
+        \hline 
+        $c_7$ & 0.343 & $c_{17}$ & 0.397 & $c_{27}$ & 0.789 \\
+        \hline 
+        $c_8$ & 0.753 & $c_{18}$ & 0.114 & $c_{28}$ & 0.909 \\
+        \hline 
+        $c_9$ & 0.051 & $c_{19}$ & 0.031 & $c_{29}$ & 0.348 \\
+        \hline 
+        $c_{10}$ & 0.708 & $c_{20}$ & 0.678 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-11}}
+    \label{tab:test-4-11}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-11.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-11}}
+    \label{fig:test-4-sac-11}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.984 & $c_{21}$ & 0.957 \\
+        \hline 
+        $c_2$ & 0.011 & $c_{12}$ & 0.722 & $c_{22}$ & 0.825\\
+        \hline 
+        $c_3$ & 0.365 & $c_{13}$ & 0.993 & $c_{23}$ & 0.689 \\
+        \hline 
+        $c_4$ & 0.710 & $c_{14}$ & 0.272 & $c_{24}$ & 0.940 \\
+        \hline 
+        $c_5$ & 0.244 & $c_{15}$ & 0.008 & $c_{25}$ & 0.411 \\
+        \hline 
+        $c_6$ & 0.062 & $c_{16}$ & 0.029 & $c_{26}$ & 0.573 \\
+        \hline 
+        $c_7$ & 0.463 & $c_{17}$ & 0.926 & $c_{27}$ & 0.126 \\
+        \hline 
+        $c_8$ & 0.848 & $c_{18}$ & 0.933 & $c_{28}$ & 0.560 \\
+        \hline 
+        $c_9$ & 0.962 & $c_{19}$ & 0.593 & $c_{29}$ & 0.850 \\
+        \hline 
+        $c_{10}$ & 0.212 & $c_{20}$ & 0.734 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-12}}
+    \label{tab:test-4-12}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-12.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-12}}
+    \label{fig:test-4-sac-12}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.796 & $c_{21}$ & 0.675 \\
+        \hline 
+        $c_2$ & 0.011 & $c_{12}$ & 0.718 & $c_{22}$ & 0.174\\
+        \hline 
+        $c_3$ & 0.693 & $c_{13}$ & 0.994 & $c_{23}$ & 0.162 \\
+        \hline 
+        $c_4$ & 0.255 & $c_{14}$ & 0.948 & $c_{24}$ & 0.398 \\
+        \hline 
+        $c_5$ & 0.978 & $c_{15}$ & 0.513 & $c_{25}$ & 0.625 \\
+        \hline 
+        $c_6$ & 0.377 & $c_{16}$ & 0.706 & $c_{26}$ & 0.019 \\
+        \hline 
+        $c_7$ & 0.583 & $c_{17}$ & 0.455 & $c_{27}$ & 0.464 \\
+        \hline 
+        $c_8$ & 0.943 & $c_{18}$ & 0.751 & $c_{28}$ & 0.210 \\
+        \hline 
+        $c_9$ & 0.873 & $c_{19}$ & 0.156 & $c_{29}$ & 0.353 \\
+        \hline 
+        $c_{10}$ & 0.716 & $c_{20}$ & 0.790 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-13}}
+    \label{tab:test-4-13}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-13.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-13}}
+    \label{fig:test-4-sac-13}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.608 & $c_{21}$ & 0.393 \\
+        \hline 
+        $c_2$ & 0.011 & $c_{12}$ & 0.713 & $c_{22}$ & 0.522\\
+        \hline 
+        $c_3$ & 0.021 & $c_{13}$ & 0.996 & $c_{23}$ & 0.634 \\
+        \hline 
+        $c_4$ & 0.800 & $c_{14}$ & 0.624 & $c_{24}$ & 0.857 \\
+        \hline 
+        $c_5$ & 0.712 & $c_{15}$ & 0.018 & $c_{25}$ & 0.839 \\
+        \hline 
+        $c_6$ & 0.692 & $c_{16}$ & 0.383 & $c_{26}$ & 0.464 \\
+        \hline 
+        $c_7$ & 0.702 & $c_{17}$ & 0.984 & $c_{27}$ & 0.801 \\
+        \hline 
+        $c_8$ & 0.038 & $c_{18}$ & 0.570 & $c_{28}$ & 0.860 \\
+        \hline 
+        $c_9$ & 0.783 & $c_{19}$ & 0.718 & $c_{29}$ & 0.856 \\
+        \hline 
+        $c_{10}$ & 0.219 & $c_{20}$ & 0.846 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-14}}
+    \label{tab:test-4-14}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-14.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-14}}
+    \label{fig:test-4-sac-14}
+\end{figure}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Parameter & Value & Parameter & Value & Parameter & Value\\
+        \hline 
+        $c_1$ & 1.0 & $c_{11}$ & 0.421 & $c_{21}$ & 0.111 \\
+        \hline 
+        $c_2$ & 0.011 & $c_{12}$ & 0.709 & $c_{22}$ & 0.870\\
+        \hline 
+        $c_3$ & 0.349 & $c_{13}$ & 0.997 & $c_{23}$ & 0.107 \\
+        \hline 
+        $c_4$ & 0.345 & $c_{14}$ & 0.299 & $c_{24}$ & 0.315 \\
+        \hline 
+        $c_5$ & 0.447 & $c_{15}$ & 0.523 & $c_{25}$ & 0.053 \\
+        \hline 
+        $c_6$ & 0.006 & $c_{16}$ & 0.060 & $c_{26}$ & 0.910 \\
+        \hline 
+        $c_7$ & 0.822 & $c_{17}$ & 0.513 & $c_{27}$ & 0.139 \\
+        \hline 
+        $c_8$ & 0.133 & $c_{18}$ & 0.388 & $c_{28}$ & 0.511 \\
+        \hline 
+        $c_9$ & 0.694 & $c_{19}$ & 0.280 & $c_{29}$ & 0.359 \\
+        \hline 
+        $c_{10}$ & 0.723 & $c_{20}$ & 0.901 & - & - \\
+        \hline 
+    \end{tabular}
+    \caption{Design parameters of KCSsim hull with sectional area curve and 
+    sectional area curve boundary-derivatives depicted in Figure
+    \ref{fig:test-4-sac-15}}
+    \label{tab:test-4-15}
+\end{table}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.7\linewidth]{figures/test-4-sac-15.pdf}
+    \caption{Sectional area curve and boundary approximated derivatives for
+    the geometry documented in Table \ref{tab:test-4-15}}
+    \label{fig:test-4-sac-15}
+\end{figure}
 \end{document}
